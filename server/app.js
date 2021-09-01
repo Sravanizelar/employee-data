@@ -1,78 +1,19 @@
-const express = require("express");
+const client = require('./db.js')
+const express = require('express');
 const app = express();
-const cors = require("cors");
-const pool = require("./db");
 
-app.use(cors());
-app.use(express.json());
+app.listen(5000, ()=>{
+    console.log("Sever is now listening at port 5000");
+})
 
-app.post("/students", async (req, res) => {
-    try {
-        
-        const { name } = req.body;
-    
-        const newStudent = await pool.query(
-          "INSERT INTO students (name) VALUES($1)  RETURNING *", 
-          [name]
-        );
-      
-        res.json(newStudent.rows[0]);
-    
-    } catch (err) {
-      console.error(err.message);
-    }
-  });
+client.connect();
 
-  app.get("/students", async(req, res) => {
-    try {
-      const getAllStudents = await pool.query("SELECT * FROM students");
-      res.json(getAllStudents.rows);
-  
-    } catch (err) {
-      console.error(err.message)
-    }
-  });
-
-  app.get("/students/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const student = await pool.query("SELECT * FROM students WHERE student_id = $1", [id]
-      );
-  
-      res.json(student.rows[0]);
-  
-    console.log(req.params)
-    } catch (err) {
-      console.error(err.message)
-    }
-    
-  });
-
-  app.put("/students/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { name } = req.body;
-      const editStudent = await pool.query("UPDATE students SET name = $1 WHERE student_id = $2",
-      [name, id]);
-  
-      res.json("You successfully updated the student record")
-    } catch (err) {
-      console.error(err.message)
-    }
-    });
-
-    app.delete("/students/:id", async (req, res) => {
-        try {
-          const { id } = req.params;
-          const deleteStudent = await pool.query("DELETE FROM students WHERE student_id = $1", 
-          [id]);
-      
-          res.json("You succesfully deleted the student record")
-        } catch (err) {
-          console.log(err.message);
+app.get('/users', (req, res)=>{
+    client.query(`Select * from employee`, (err, result)=>{
+        if(!err){
+            res.send(result.rows);
         }
-      });
-
-app.listen(5000, function() {
-    console.log("Listening for requests on Port 5000")
-});
+    });
+    client.end;
+})
+client.connect();

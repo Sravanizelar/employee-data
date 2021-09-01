@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import './App.css';
 import Input from './components/Input';
-import ListStudents from './components/ListStudents';
+import Employeelist from './components/employeelist';
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <Input />
     <br />
     <br />
-    <ListStudents />
+    <Employeelist />
     </div>
   </Fragment>
   );
